@@ -11,7 +11,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # 1️⃣ Récupérer le code
+      # 1️⃣ Checkout du code
       - name: Checkout du code
         uses: actions/checkout@v3
 
@@ -22,20 +22,21 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3️⃣ Build Maven
+      # 3️⃣ Build Maven dans le dossier api
       - name: Build Maven
+        working-directory: api
         run: mvn clean package -DskipTests
 
       # 4️⃣ Login GHCR
       - name: Login to GHCR
         run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # 5️⃣ Build Docker
+      # 5️⃣ Build Docker (contexte = api)
       - name: Build Docker image
         run: |
           IMAGE_NAME=ghcr.io/YanniB/Tp4MaintenanceLogiciel
           COMMIT_TAG=$(git rev-parse --short HEAD)
-          docker build -t $IMAGE_NAME:$COMMIT_TAG .
+          docker build -t $IMAGE_NAME:$COMMIT_TAG api
 
       # 6️⃣ Push Docker
       - name: Push Docker image
