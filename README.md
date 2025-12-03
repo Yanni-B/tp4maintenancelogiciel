@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # TODO
 
 **TODO** is a web application that introduces you to the power, performance, and simplicity of [MariaDB](https://mariadb.com/products/).
@@ -151,3 +152,6 @@ Or reach out to us diretly via:
 
 ## License <a name="license"></a>
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=plastic)](https://opensource.org/licenses/MIT)
+=======
+# Tp4MaintenanceLogiciel
+>>>>>>> 2ae59327f65d7dec3e8299561772bcdb3d47abb5
