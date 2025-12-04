@@ -31,7 +31,7 @@ jobs:
         working-directory: src/api
         run: mvn clean package -DskipTests
 
-      # 4️⃣ Login GHCR (Mise à jour pour utiliser l'action officielle)
+      # 4️⃣ Login GHCR (Retour au PAT manuel pour la création initiale)
       - name: Login to GHCR (GitHub Container Registry)
         uses: docker/login-action@v2
         with:
@@ -43,7 +43,7 @@ jobs:
       - name: Build Docker image
         id: docker_build
         run: |
-          # CORRECTION CLÉ : Utilisation de Yanni-b (nom d'utilisateur exact) au lieu de yannib
+          # Nom d'utilisateur exact : Yanni-b
           IMAGE_NAME=ghcr.io/Yanni-b/tp4maintenancelogiciel
           COMMIT_TAG=$(git rev-parse --short HEAD)
           
