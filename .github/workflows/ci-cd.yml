@@ -8,6 +8,10 @@ on:
 
 jobs:
   build:
+    permissions:
+      contents: read
+      packages: write
+
     runs-on: ubuntu-latest
 
     steps:
@@ -27,20 +31,32 @@ jobs:
         working-directory: src/api
         run: mvn clean package -DskipTests
 
-      # 4️⃣ Login GHCR
-      - name: Login to GHCR
-        run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+      # 4️⃣ Login GHCR (Mise à jour pour utiliser l'action officielle)
+      - name: Login to GHCR (GitHub Container Registry)
+        uses: docker/login-action@v2
+        with:
+          # Utiliser 'github.actor' (le nom d'utilisateur qui a déclenché l'action)
+          username: ${{ github.actor }}
+          # Utiliser votre PAT stocké comme Secret de dépôt.
+          password: ${{ secrets.GHCR_TOKEN }}
 
       # 5️⃣ Build Docker (contexte = src/api)
       - name: Build Docker image
+        id: docker_build
         run: |
-          IMAGE_NAME=ghcr.io/yannib/tp4maintenancelogiciel
+          # CORRECTION CLÉ : Utilisation de Yanni-b (nom d'utilisateur exact) au lieu de yannib
+          IMAGE_NAME=ghcr.io/Yanni-b/tp4maintenancelogiciel
           COMMIT_TAG=$(git rev-parse --short HEAD)
+          
+          # Ajoute les tags pour le build
+          echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_OUTPUT
+          echo "COMMIT_TAG=$COMMIT_TAG" >> $GITHUB_OUTPUT
+          
+          # Construction de l'image
           docker build -t $IMAGE_NAME:$COMMIT_TAG src/api
 
       # 6️⃣ Push Docker
       - name: Push Docker image
+        # Utilise les variables de l'étape précédente
         run: |
-          IMAGE_NAME=ghcr.io/yannib/tp4maintenancelogiciel
-          COMMIT_TAG=$(git rev-parse --short HEAD)
-          docker push $IMAGE_NAME:$COMMIT_TAG
+          docker push ${{ steps.docker_build.outputs.IMAGE_NAME }}:${{ steps.docker_build.outputs.COMMIT_TAG }}
