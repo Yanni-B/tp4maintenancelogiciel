@@ -1,16 +1,16 @@
-# ===== Étape 1 : Build Maven =====
+# Étape 1 : Build Maven
 FROM maven:3.9.3-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-# Copier le pom.xml et le code
+# Copier pom.xml et src
 COPY pom.xml .
 COPY src ./src
 
-# Build Maven en sautant les tests
+# Build Maven
 RUN mvn clean package -DskipTests
 
-# ===== Étape 2 : Image finale légère =====
+# Étape 2 : Image finale légère
 FROM eclipse-temurin:17-jre-alpine
 
 WORKDIR /app
@@ -19,5 +19,4 @@ WORKDIR /app
 COPY --from=build /app/target/*.jar app.jar
 
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
