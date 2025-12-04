@@ -46,11 +46,9 @@ jobs:
       - name: Build Docker image
         id: docker_build
         run: |
-          # NOUVELLE CORRECTION CLÉ : Utilisation de l'expansion de variable Bash (zsh) ${VARIABLE,,}
-          # qui convertit la chaîne en minuscules (ex: 'Yanni-b' devient 'yanni-b').
-          LOWERCASE_ACTOR=${{ github.actor },,}
-          
-          IMAGE_NAME=ghcr.io/$LOWERCASE_ACTOR/tp4maintenancelogiciel
+          # CORRECTION CLÉ : Utilisation du nom d'utilisateur statique en minuscules (yanni-b)
+          # pour satisfaire l'exigence du tag Docker.
+          IMAGE_NAME=ghcr.io/yanni-b/tp4maintenancelogiciel
           COMMIT_TAG=$(git rev-parse --short HEAD)
           
           # Ajoute les tags pour le build
