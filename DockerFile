@@ -1,30 +1,23 @@
 # ===== Étape 1 : Build Maven =====
 FROM maven:3.9.3-eclipse-temurin-17 AS build
 
-# Répertoire de travail
 WORKDIR /app
 
-# Copier uniquement les fichiers Maven pour bénéficier du cache
+# Copier le pom.xml et le code
 COPY pom.xml .
 COPY src ./src
 
-# Builder le projet sans tests (tests peuvent être activés si nécessaire)
+# Build Maven en sautant les tests
 RUN mvn clean package -DskipTests
 
 # ===== Étape 2 : Image finale légère =====
 FROM eclipse-temurin:17-jre-alpine
 
-# Répertoire de travail dans le container
 WORKDIR /app
 
 # Copier le JAR depuis l'étape de build
 COPY --from=build /app/target/*.jar app.jar
 
-# Exposer le port de l'application Spring Boot
 EXPOSE 8080
 
-# Variable d'environnement optionnelle pour la DB
-ENV DB_PASSWORD=""
-
-# Lancer l'application
 ENTRYPOINT ["java", "-jar", "app.jar"]
