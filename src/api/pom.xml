@@ -10,6 +10,7 @@
 	<version>1.0.0</version>
 	<packaging>jar</packaging>
 
+	<!-- Parent Spring Boot pour gérer versions -->
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
@@ -41,7 +42,7 @@
 
 	<build>
 		<plugins>
-			<!-- Compiler plugin pour Java 17 + Lombok -->
+			<!-- Compiler plugin pour Java 17 -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
@@ -50,14 +51,11 @@
 					<source>${java.version}</source>
 					<target>${java.version}</target>
 					<fork>true</fork>
-					<compilerArgs>
-						<arg>--add-exports</arg>
-						<arg>jdk.compiler/com.sun.tools.javac.processing=ALL-UNNAMED</arg>
-					</compilerArgs>
+					<!-- Plus besoin de -add-exports -->
 				</configuration>
 			</plugin>
 
-			<!-- Spring Boot plugin -->
+			<!-- Spring Boot Maven Plugin -->
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
