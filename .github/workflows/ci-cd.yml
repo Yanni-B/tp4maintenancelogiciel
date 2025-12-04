@@ -22,7 +22,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # 3️⃣ Build Maven dans le dossier src/api
+      # 3️⃣ Build Maven dans src/api
       - name: Build Maven
         working-directory: src/api
         run: mvn clean package -DskipTests
@@ -31,7 +31,7 @@ jobs:
       - name: Login to GHCR
         run: echo ${{ secrets.GHCR_TOKEN }} | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      # 5️⃣ Build Docker (contexte = src/api)
+      # 5️⃣ Build Docker image (contexte = src/api)
       - name: Build Docker image
         run: |
           IMAGE_NAME=ghcr.io/YanniB/Tp4MaintenanceLogiciel
