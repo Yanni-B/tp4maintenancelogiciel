@@ -8,13 +8,9 @@ RUN mvn clean package -DskipTests
 
 # Étape 2 : image finale pour exécution
 FROM eclipse-temurin:17-jre-alpine
-
 WORKDIR /app
-
 COPY --from=build /app/api/target/*.jar app.jar
 
 ENV DB_PASSWORD=""
-
 EXPOSE 8080
-
 ENTRYPOINT ["java", "-jar", "app.jar"]
