@@ -45,13 +45,12 @@ jobs:
       # 5️⃣ Build Docker (contexte = src/api)
       - name: Build Docker image
         id: docker_build
-        # Définition de l'URL dans une variable d'environnement (env)
-        # où la fonction 'lower' est garantie d'être évaluée correctement.
-        env:
-          IMAGE_FULL_NAME: ghcr.io/${{ lower(github.actor) }}/tp4maintenancelogiciel
         run: |
-          # CORRECTION CLÉ : Utilisation de la variable d'environnement évaluée
-          IMAGE_NAME=$IMAGE_FULL_NAME
+          # NOUVELLE CORRECTION CLÉ : Utilisation de l'expansion de variable Bash (zsh) ${VARIABLE,,}
+          # qui convertit la chaîne en minuscules (ex: 'Yanni-b' devient 'yanni-b').
+          LOWERCASE_ACTOR=${{ github.actor },,}
+          
+          IMAGE_NAME=ghcr.io/$LOWERCASE_ACTOR/tp4maintenancelogiciel
           COMMIT_TAG=$(git rev-parse --short HEAD)
           
           # Ajoute les tags pour le build
