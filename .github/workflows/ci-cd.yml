@@ -46,8 +46,9 @@ jobs:
       - name: Build Docker image
         id: docker_build
         run: |
-          # CORRECTION CLÉ : Le tag Docker DOIT être en minuscules (yanni-b)
-          IMAGE_NAME=ghcr.io/${{ toLower(github.repository_owner) }}/tp4maintenancelogiciel
+          # CORRECTION CLÉ : Utilisation de la fonction 'lower' (au lieu de 'toLower')
+          # et utilisation de 'github.actor' pour le nom d'utilisateur
+          IMAGE_NAME=ghcr.io/${{ lower(github.actor) }}/tp4maintenancelogiciel
           COMMIT_TAG=$(git rev-parse --short HEAD)
           
           # Ajoute les tags pour le build
