@@ -3,13 +3,13 @@ FROM maven:3.8.7-eclipse-temurin-17 AS build
 
 WORKDIR /app
 COPY . .
-WORKDIR /app/api
+WORKDIR /app/src/api
 RUN mvn clean package -DskipTests
 
 # Étape 2 : image finale pour exécution
 FROM eclipse-temurin:17-jre-alpine
 WORKDIR /app
-COPY --from=build /app/api/target/*.jar app.jar
+COPY --from=build /app/src/api/target/*.jar app.jar
 
 ENV DB_PASSWORD=""
 EXPOSE 8080
