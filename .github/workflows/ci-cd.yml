@@ -8,6 +8,8 @@ on:
 
 jobs:
   build:
+    # NOTE : Nous gardons 'packages: write' par précaution,
+    # mais le login utilisera le PAT manuel qui est plus puissant.
     permissions:
       contents: read
       packages: write
@@ -37,7 +39,7 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          password: ${{ secrets.GHCR_TOKEN }}
+          password: ${{ secrets.GHCR_TOKEN }} # <-- RETOUR AU PAT MANUEL
 
       # 5️⃣ Build Docker (contexte = src/api)
       - name: Build Docker image
@@ -56,5 +58,6 @@ jobs:
 
       # 6️⃣ Push Docker
       - name: Push Docker image
+        # Utilise les variables de l'étape précédente
         run: |
           docker push ${{ steps.docker_build.outputs.IMAGE_NAME }}:${{ steps.docker_build.outputs.COMMIT_TAG }}
