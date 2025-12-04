@@ -1,55 +1,43 @@
 package com.mariadb.todo.services;
 
-import java.util.Optional;
-
 import com.mariadb.todo.domain.Task;
 import com.mariadb.todo.repositories.TaskRepository;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-// Registered as a Spring Service (Component)
+import java.util.Optional;
+
 @Service
 public class TaskService {
-    
-    // Automatically instantiate (via Spring IoC) 
-    @Autowired
-    private TaskRepository repository;
 
-    // 
-    public Boolean isValid(final Task task) {
-        if (task != null && !task.getDescription().isEmpty()) {
-            return true;
-        }
-        return false;
+    private final TaskRepository taskRepository;
+
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
     }
 
-    // Get all records from the tasks table
+    @Transactional(readOnly = true)
     public Iterable<Task> getAllTasks() {
-        return this.repository.findAll();
+        return taskRepository.findAll();
     }
 
-    // Save a new task record
-    public Task createTask(final Task task) {
-        return this.repository.save(task);
+    @Transactional(readOnly = true)
+    public Optional<Task> getTaskById(Long id) {
+        return taskRepository.findById(id);
     }
 
-    // Update an existing task record
     @Transactional
-    public Task updateTask(final Task task) {
-        Optional<Task> ot = this.repository.findById(task.getId());
-        Task t = ot.get();
-        t.setDescription(task.getDescription());
-        t.setCompleted(task.getCompleted());
-        return this.repository.save(t);
+    public Task createTask(Task task) {
+        return taskRepository.save(task);
     }
 
-    // Delete the task record by specified id
     @Transactional
-    public void deleteTask(final int id){
-        Optional<Task> ot = this.repository.findById(id);
-        Task t = ot.get();
-        this.repository.delete(t);
+    public Task updateTask(Task task) {
+        return taskRepository.save(task);
+    }
+
+    @Transactional
+    public void deleteTask(Long id) {
+        taskRepository.deleteById(id);
     }
 }

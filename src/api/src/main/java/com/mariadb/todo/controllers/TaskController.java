@@ -2,57 +2,49 @@ package com.mariadb.todo.controllers;
 
 import com.mariadb.todo.domain.Task;
 import com.mariadb.todo.services.TaskService;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/tasks")
+@RequestMapping("/tasks")
 public class TaskController {
 
-    @Autowired
-    private TaskService service;
+    private final TaskService taskService;
 
-    // Get all tasks
-    @GetMapping()
-    public ResponseEntity<Iterable<Task>> get() {
-        return ResponseEntity.ok(this.service.getAllTasks());
+    public TaskController(TaskService taskService) {
+        this.taskService = taskService;
     }
 
-    // Create a new task
-    @PostMapping()
-    public ResponseEntity<Task> post(@RequestBody Task task) {
-        if (service.isValid(task)) {
-            return ResponseEntity.ok(this.service.createTask(task));
-        }
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    @GetMapping
+    public ResponseEntity<Iterable<Task>> getAllTasks() {
+        return ResponseEntity.ok(taskService.getAllTasks());
     }
 
-    // Update a task
-    @PutMapping()
-    public ResponseEntity<Task> put(@RequestBody Task task) {
-        if (service.isValid(task)) {
-            return ResponseEntity.ok(this.service.updateTask(task));
-        }
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    @GetMapping("/{id}")
+    public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
+        Optional<Task> task = taskService.getTaskById(id);
+        return task.map(ResponseEntity::ok)
+                .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Delete a task
-    @DeleteMapping()
-    public ResponseEntity<Void> delete(@RequestParam int id) {
-        if (id > 0) {
-            this.service.deleteTask(id);
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).build();
+    @PostMapping
+    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+        Task saved = taskService.createTask(task);
+        return ResponseEntity.ok(saved);
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+        task.setId(id);
+        Task updated = taskService.updateTask(task);
+        return ResponseEntity.ok(updated);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTask(id);
+        return ResponseEntity.noContent().build();
     }
 }
