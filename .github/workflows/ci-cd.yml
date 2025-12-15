@@ -36,13 +36,14 @@ jobs:
       - name: Build Docker image
         id: docker_build
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}
+          IMAGE_NAME=ghcr.io/$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           COMMIT_TAG=$(git rev-parse --short HEAD)
 
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_OUTPUT
           echo "COMMIT_TAG=$COMMIT_TAG" >> $GITHUB_OUTPUT
 
           docker build -t $IMAGE_NAME:$COMMIT_TAG src/api
+
 
       - name: Push Docker image
         run: |
