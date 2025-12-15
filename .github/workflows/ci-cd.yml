@@ -37,10 +37,12 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build Docker image 
         id: docker_build
         run: |
-          IMAGE_NAME=ghcr.io/${{ github.repository }}
+          LOWERCASE_REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
+          
+          IMAGE_NAME=ghcr.io/$LOWERCASE_REPO
           COMMIT_TAG=$(git rev-parse --short HEAD)
 
           echo "IMAGE_NAME=$IMAGE_NAME" >> $GITHUB_OUTPUT
