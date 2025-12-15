@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
       - name: api
-        image: ghcr.io/YanniB/Tp4:<TAG>
+        image: ghcr.io/YanniB/Tp4:7e060fc
         ports:
         - containerPort: 8080
         env:
