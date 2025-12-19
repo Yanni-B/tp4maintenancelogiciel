@@ -13,7 +13,7 @@
 	<description>Todo application Spring Boot 3</description>
 
 	<properties>
-		<java.version>17</java.version>
+		<java.version>25</java.version>
 		<spring.boot.version>3.3.3</spring.boot.version>
 	</properties>
 
