@@ -4,7 +4,6 @@ on:
   push:
     branches: [ "main" ]
 
-# Définir les permissions au niveau du workflow (bonne pratique)
 permissions:
   contents: read
   packages: write
@@ -13,7 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    # Définir les permissions au niveau du job (essentiel)
     permissions:
       contents: read
       packages: write
@@ -37,15 +35,11 @@ jobs:
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
-          # 🛑 MODIFICATION CLÉ : Utiliser un PAT avec le scope 'write:packages'
-          # Assurez-vous d'avoir créé le secret 'CR_PAT' dans les paramètres de votre dépôt.
           password: ${{ secrets.CR_PAT }} 
 
       - name: Build Docker image
         id: docker_build
         run: |
-          # 💡 CORRECTION CONSERVÉE : Convertir le nom du dépôt en minuscules
-          # pour respecter la règle de nommage Docker (qui était l'erreur précédente).
           LOWERCASE_REPO=$(echo "${{ github.repository }}" | tr '[:upper:]' '[:lower:]')
           
           IMAGE_NAME=ghcr.io/$LOWERCASE_REPO
