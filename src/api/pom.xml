@@ -22,6 +22,7 @@
 
     <properties>
         <java.version>25</java.version>
+        <maven.compiler.release>21</maven.compiler.release>
     </properties>
 
     <dependencies>
@@ -48,11 +49,6 @@
         </dependency>
     </dependencies>
 
-   <properties>
-        <java.version>25</java.version>
-        <maven.compiler.release>21</maven.compiler.release>
-    </properties>
-
     <build>
         <plugins>
             <plugin>
@@ -71,5 +67,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>
